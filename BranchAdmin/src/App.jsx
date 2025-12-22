@@ -21,10 +21,10 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           {/* Login Page */}
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Login />} />
 
           {/* Dashboard Layout */}
-          <Route path="/" element={<MainDashBord />}>
+          <Route path="/dashbord" element={<MainDashBord />}>
             <Route index element={<Home />} />
             <Route path="manage-staff" element={<ManageStaff />} />
             <Route path="manage-teacher" element={<ManageTeacher />} />
