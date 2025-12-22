@@ -89,7 +89,7 @@ export default function MainDashBord() {
         {/* Menu */}
         <nav className="p-4 space-y-2 mt-4 flex-1 overflow-y-auto custom-scrollbar">
           <NavLink
-            to="/"
+            to="/dashbord"
             end
             className={menuClass}
             onClick={closeSidebar}
@@ -104,7 +104,7 @@ export default function MainDashBord() {
           </NavLink>
 
           <NavLink
-            to="/manage-staff"
+            to="/dashbord/manage-staff"
             className={menuClass}
             onClick={closeSidebar}
           >
@@ -118,7 +118,7 @@ export default function MainDashBord() {
           </NavLink>
 
           <NavLink
-            to="/manage-teacher"
+            to="/dashbord/manage-teacher"
             className={menuClass}
             onClick={closeSidebar}
           >
@@ -132,7 +132,7 @@ export default function MainDashBord() {
           </NavLink>
 
           <NavLink
-            to="/manage-section"
+            to="/dashbord/manage-section"
             className={menuClass}
             onClick={closeSidebar}
           >
@@ -146,7 +146,7 @@ export default function MainDashBord() {
           </NavLink>
 
           <NavLink
-            to="/manage-class"
+            to="/dashbord/manage-class"
             className={menuClass}
             onClick={closeSidebar}
           >
@@ -160,7 +160,7 @@ export default function MainDashBord() {
           </NavLink>
 
           <NavLink
-            to="/manage-fees"
+            to="/dashbord/manage-fees"
             className={menuClass}
             onClick={closeSidebar}
           >
@@ -174,7 +174,7 @@ export default function MainDashBord() {
           </NavLink>
 
           <NavLink
-            to="/approval"
+            to="/dashbord/approval"
             className={menuClass}
             onClick={closeSidebar}
           >
@@ -188,7 +188,7 @@ export default function MainDashBord() {
           </NavLink>
 
           <NavLink
-            to="/reports"
+            to="/dashbord/reports"
             className={menuClass}
             onClick={closeSidebar}
           >
@@ -205,7 +205,7 @@ export default function MainDashBord() {
         {/* Logout Button */}
         <div className="p-4 border-t border-slate-700/50 flex-shrink-0">
           <button
-            onClick={() => navigate("/login")}
+            onClick={() => navigate("/")}
             className="flex w-full items-center justify-center gap-3 px-6 py-4 rounded-2xl
             bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 
             hover:shadow-xl hover:shadow-red-500/25 hover:scale-105 transition-all duration-300 font-semibold"
