@@ -13,6 +13,8 @@ import FeesManagement from "./Dashbord.jsx/FeesManagement";
 import Approval from "./Dashbord.jsx/Approval";
 import Login from "./Login";
 import Reports from "./Dashbord.jsx/Reports";
+import MappingFees from "./Dashbord.jsx/MappingFees";
+// import MappingFees from "./Dashbord.jsx/MappingFees";
 
 
 export default function App() {
@@ -32,9 +34,11 @@ export default function App() {
             <Route path="manage-fees" element={<ManageFees />} />
             <Route path="manage-class" element={<ManageClass />} />
             <Route path="manage-section" element={<ManageSection />} />
-            <Route path="fees-management" element={<FeesManagement />} />
+            <Route path="fees-management" element={<ManageFees />} />
             <Route path="reports" element={<Reports />} />
             <Route path="approval" element={<Approval />} />
+            <Route path="mapping-fees" element={<MappingFees />} />
+            <Route path="mapping-fees" element={<MappingFees />} />
           </Route>
         </Routes>
       </BrowserRouter>

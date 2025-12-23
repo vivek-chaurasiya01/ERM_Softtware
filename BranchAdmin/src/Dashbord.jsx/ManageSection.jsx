@@ -2,20 +2,26 @@ import React, { useState } from 'react';
 import { useSchool } from '../context/SchoolContext';
 
 export default function ManageSection() {
-  const { sections, addSection, updateSection, deleteSection } = useSchool();
+  const { sections, classes, addSection, updateSection, deleteSection } = useSchool();
   const [showForm, setShowForm] = useState(false);
   const [editingSection, setEditingSection] = useState(null);
   const [formData, setFormData] = useState({
     sectionName: '',
+    assignedClass: '',
     capacity: '',
     description: ''
   });
 
   const handleAddSection = () => {
+    if (classes.length === 0) {
+      alert('Please create classes first before adding sections!');
+      return;
+    }
     setShowForm(true);
     setEditingSection(null);
     setFormData({
       sectionName: '',
+      assignedClass: '',
       capacity: '',
       description: ''
     });
@@ -39,85 +45,146 @@ export default function ManageSection() {
   };
 
   const handleDelete = (id) => {
-    deleteSection(id);
+    if (window.confirm('Are you sure you want to delete this section?')) {
+      deleteSection(id);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-2 sm:p-4 lg:p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">
       {/* Header */}
-      <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-6 sm:mb-8 border border-gray-200">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div className="flex items-center gap-3 sm:gap-4">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-              <span className="text-white text-xl sm:text-2xl font-bold">📑</span>
+      <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-6 mb-8 border border-white/50">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <span className="text-white text-2xl">📑</span>
             </div>
             <div>
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">Manage Sections</h1>
-              <p className="text-gray-600 text-xs sm:text-sm lg:text-base">Create sections for your classes</p>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                Manage Sections
+              </h1>
+              <p className="text-gray-600 mt-1">Create sections and assign them to classes</p>
             </div>
           </div>
           <button 
             onClick={handleAddSection}
-            className="w-full sm:w-auto bg-blue-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold flex items-center justify-center gap-2 text-sm sm:text-base"
+            className="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-2xl hover:from-green-600 hover:to-green-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold flex items-center gap-2"
           >
-            <span className="text-base sm:text-lg">➕</span>
+            <span className="text-lg">➕</span>
             Add New Section
           </button>
         </div>
       </div>
 
+      {/* Classes Required Notice */}
+      {classes.length === 0 && (
+        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 mb-8 rounded-2xl">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">⚠️</span>
+            <div>
+              <h3 className="text-lg font-bold text-yellow-800">Classes Required</h3>
+              <p className="text-yellow-700 mt-1">
+                You need to create classes first before you can add sections. 
+                <a href="/manage-class" className="font-semibold underline ml-1">Go to Manage Classes</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {showForm && (
-        <div className="bg-white rounded-2xl shadow-lg mb-6 sm:mb-8 border border-gray-200 overflow-hidden">
-          <div className="bg-blue-600 p-4 sm:p-6">
-            <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
-              <span className="text-xl sm:text-2xl">📝</span>
-              {editingSection ? 'Edit Section' : 'Add New Section'}
-            </h3>
-            <p className="text-blue-100 mt-1 sm:mt-2 text-xs sm:text-sm">Configure section details</p>
+        <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl mb-8 border border-white/50 overflow-hidden">
+          <div className="bg-gradient-to-r from-green-500 to-green-600 p-6">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">📝</span>
+              <div>
+                <h3 className="text-xl font-bold text-white">
+                  {editingSection ? 'Edit Section' : 'Add New Section'}
+                </h3>
+                <p className="text-green-100 text-sm mt-1">Configure section details and assign to class</p>
+              </div>
+            </div>
           </div>
           
-          <form onSubmit={handleSubmit} className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+          <form onSubmit={handleSubmit} className="p-6 space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-xs sm:text-sm font-semibold text-gray-700 block">Section Name *</label>
+                <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                  <span className="text-lg">🏷️</span>
+                  Section Name *
+                </label>
                 <input
                   type="text"
-                  placeholder="Enter section name (e.g., A, B, C)"
+                  placeholder="e.g., A, B, C, Alpha, Beta"
                   value={formData.sectionName}
                   onChange={(e) => setFormData({...formData, sectionName: e.target.value})}
-                  className="w-full border-2 border-gray-300 p-2 sm:p-3 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white shadow-sm hover:shadow-md text-sm sm:text-base"
+                  className="w-full border-2 border-gray-300 p-3 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-white shadow-sm hover:shadow-md"
                   required
                 />
               </div>
+              
               <div className="space-y-2">
-                <label className="text-xs sm:text-sm font-semibold text-gray-700 block">Capacity *</label>
-                <input
-                  type="number"
-                  placeholder="Maximum students"
-                  value={formData.capacity}
-                  onChange={(e) => setFormData({...formData, capacity: e.target.value})}
-                  className="w-full border-2 border-gray-300 p-2 sm:p-3 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white shadow-sm hover:shadow-md text-sm sm:text-base"
+                <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                  <span className="text-lg">🎓</span>
+                  Assign to Class *
+                </label>
+                <select
+                  value={formData.assignedClass}
+                  onChange={(e) => setFormData({...formData, assignedClass: e.target.value})}
+                  className="w-full border-2 border-gray-300 p-3 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-white shadow-sm hover:shadow-md"
                   required
-                />
+                >
+                  <option value="">Select a class</option>
+                  {classes.map(classItem => (
+                    <option key={classItem.id} value={classItem.className}>
+                      {classItem.className} ({classItem.classCode})
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 
-            <textarea
-              placeholder="Description (Optional)"
-              value={formData.description}
-              onChange={(e) => setFormData({...formData, description: e.target.value})}
-              className="w-full border-2 border-gray-300 p-2 sm:p-3 rounded-xl focus:ring-2 focus:ring-blue-500 transition-all text-sm sm:text-base"
-              rows="3"
-            />
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                <span className="text-lg">👥</span>
+                Section Capacity *
+              </label>
+              <input
+                type="number"
+                placeholder="Maximum students for this section"
+                value={formData.capacity}
+                onChange={(e) => setFormData({...formData, capacity: e.target.value})}
+                className="w-full border-2 border-gray-300 p-3 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-white shadow-sm hover:shadow-md"
+                required
+                min="1"
+              />
+            </div>
 
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-              <button type="submit" className="bg-blue-600 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-xl hover:bg-blue-700 font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm sm:text-base">
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                <span className="text-lg">📄</span>
+                Description (Optional)
+              </label>
+              <textarea
+                placeholder="Additional information about this section"
+                value={formData.description}
+                onChange={(e) => setFormData({...formData, description: e.target.value})}
+                className="w-full border-2 border-gray-300 p-3 rounded-xl focus:ring-2 focus:ring-green-500 transition-all bg-white shadow-sm hover:shadow-md"
+                rows="3"
+              />
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button 
+                type="submit" 
+                className="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-3 rounded-2xl hover:from-green-600 hover:to-green-700 font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+              >
                 {editingSection ? '✏️ Update Section' : '💾 Add Section'}
               </button>
               <button 
                 type="button" 
                 onClick={() => setShowForm(false)}
-                className="bg-gray-600 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-xl hover:bg-gray-700 font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm sm:text-base"
+                className="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-8 py-3 rounded-2xl hover:from-gray-600 hover:to-gray-700 font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
               >
                 ❌ Cancel
               </button>
@@ -126,51 +193,78 @@ export default function ManageSection() {
         </div>
       )}
 
-      <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
-        <div className="bg-gray-50 px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
-          <h3 className="text-lg sm:text-xl font-bold text-gray-900">Section List</h3>
+      {/* Section List */}
+      <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-white/50 overflow-hidden">
+        <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
+          <h3 className="text-xl font-bold text-gray-900">Sections List</h3>
+          <p className="text-gray-600 text-sm mt-1">Manage all class sections</p>
         </div>
+        
         {sections.length === 0 ? (
-          <div className="p-6 sm:p-8 text-center">
-            <div className="text-4xl sm:text-6xl mb-4">📑</div>
-            <p className="text-gray-500 text-base sm:text-lg">No sections added yet</p>
-            <p className="text-gray-400 text-sm sm:text-base">Click "Add New Section" to get started</p>
+          <div className="p-12 text-center">
+            <div className="text-6xl mb-4">📑</div>
+            <p className="text-gray-500 text-lg font-medium">No sections created yet</p>
+            <p className="text-gray-400 mt-2">
+              {classes.length === 0 
+                ? 'Create classes first, then add sections'
+                : 'Click "Add New Section" to create your first section'
+              }
+            </p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-3 sm:px-6 py-3 sm:py-4 text-left font-semibold text-xs sm:text-sm text-gray-700">Section Name</th>
-                  <th className="px-3 sm:px-6 py-3 sm:py-4 text-left font-semibold text-xs sm:text-sm text-gray-700">Capacity</th>
-                  <th className="px-3 sm:px-6 py-3 sm:py-4 text-left font-semibold text-xs sm:text-sm text-gray-700">Actions</th>
+                  <th className="px-6 py-4 text-left font-bold text-gray-800">Section</th>
+                  <th className="px-6 py-4 text-left font-bold text-gray-800">Assigned Class</th>
+                  <th className="px-6 py-4 text-left font-bold text-gray-800">Capacity</th>
+                  <th className="px-6 py-4 text-left font-bold text-gray-800">Description</th>
+                  <th className="px-6 py-4 text-left font-bold text-gray-800">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {sections.map((section, index) => (
                   <tr key={section.id} className={`border-b hover:bg-gray-50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-25'}`}>
-                    <td className="px-3 sm:px-6 py-3 sm:py-4 font-medium text-xs sm:text-sm">
-                      <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-lg font-bold">
-                        Section {section.sectionName}
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
+                          <span className="text-green-600 font-bold">📑</span>
+                        </div>
+                        <div>
+                          <div className="font-bold text-gray-900">Section {section.sectionName}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                        {section.assignedClass}
                       </span>
                     </td>
-                    <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-semibold">{section.capacity}</td>
-                    <td className="px-3 sm:px-6 py-3 sm:py-4">
-                      <div className="overflow-x-auto">
-                        <div className="flex gap-2 min-w-max pb-2 sm:pb-0">
-                          <button 
-                            onClick={() => handleEdit(section)}
-                            className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-3 py-2 rounded-xl text-xs sm:text-sm hover:from-blue-600 hover:to-blue-700 transition-all duration-300 font-semibold flex items-center gap-1 justify-center shadow-lg hover:shadow-xl transform hover:scale-105 whitespace-nowrap"
-                          >
-                            ✏️ Edit
-                          </button>
-                          <button 
-                            onClick={() => handleDelete(section.id)}
-                            className="bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-2 rounded-xl text-xs sm:text-sm hover:from-red-600 hover:to-red-700 transition-all duration-300 font-semibold flex items-center gap-1 justify-center shadow-lg hover:shadow-xl transform hover:scale-105 whitespace-nowrap"
-                          >
-                            🗑️ Delete
-                          </button>
-                        </div>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">👥</span>
+                        <span className="font-bold text-gray-900">{section.capacity}</span>
+                        <span className="text-gray-500 text-sm">students</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-gray-600 max-w-xs truncate">
+                      {section.description || 'No description'}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex gap-2">
+                        <button 
+                          onClick={() => handleEdit(section)}
+                          className="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-xl hover:from-green-600 hover:to-green-700 transition-all duration-300 font-semibold flex items-center gap-1 shadow-lg hover:shadow-xl transform hover:scale-105"
+                        >
+                          ✏️ Edit
+                        </button>
+                        <button 
+                          onClick={() => handleDelete(section.id)}
+                          className="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-xl hover:from-red-600 hover:to-red-700 transition-all duration-300 font-semibold flex items-center gap-1 shadow-lg hover:shadow-xl transform hover:scale-105"
+                        >
+                          🗑️ Delete
+                        </button>
                       </div>
                     </td>
                   </tr>

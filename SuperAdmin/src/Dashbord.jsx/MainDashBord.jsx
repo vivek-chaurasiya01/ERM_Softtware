@@ -1,6 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { FaHome, FaSignOutAlt, FaBell, FaSearch, FaCog, FaClipboardList, FaChartBar, FaUniversity, FaKey } from "react-icons/fa";
+import {
+  FaHome,
+  FaSignOutAlt,
+  FaBell,
+  FaSearch,
+  FaCog,
+  FaClipboardList,
+  FaChartBar,
+  FaUniversity,
+  FaKey,
+} from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { MdClose, MdDashboard } from "react-icons/md";
 
@@ -58,7 +68,7 @@ export default function MainDashBord() {
                 <h1 className="font-bold text-xl tracking-wide bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                   EduPanel
                 </h1>
-                <p className="text-xs text-slate-400">Management System</p>
+                <p className="text-xs text-slate-400">Super Admin</p>
               </div>
             )}
           </div>
@@ -90,20 +100,6 @@ export default function MainDashBord() {
             )}
           </NavLink>
           <NavLink
-            to="/dashbord/college-management"
-            className={menuClass}
-            onClick={closeSidebar}
-          >
-            <FaUniversity size={20} />
-            {open && <span className="font-semibold">College Management</span>}
-            {!open && (
-              <div className="absolute left-full ml-2 px-3 py-2 bg-slate-800 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                College Management
-              </div>
-            )}
-          </NavLink>
-
-          <NavLink
             to="/dashbord/plans"
             className={menuClass}
             onClick={closeSidebar}
@@ -113,6 +109,19 @@ export default function MainDashBord() {
             {!open && (
               <div className="absolute left-full ml-2 px-3 py-2 bg-slate-800 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                 Plans
+              </div>
+            )}
+          </NavLink>
+          <NavLink
+            to="/dashbord/college-management"
+            className={menuClass}
+            onClick={closeSidebar}
+          >
+            <FaUniversity size={20} />
+            {open && <span className="font-semibold">College Management</span>}
+            {!open && (
+              <div className="absolute left-full ml-2 px-3 py-2 bg-slate-800 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                College Management
               </div>
             )}
           </NavLink>
@@ -192,14 +201,6 @@ export default function MainDashBord() {
                 />
               </div>
             </div>
-
-            {/* Notifications */}
-            <button className="relative p-3 rounded-2xl hover:bg-slate-100 transition-all hover:scale-105">
-              <FaBell size={20} className="text-slate-600" />
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                3
-              </span>
-            </button>
 
             {/* Settings */}
             <button className="p-3 rounded-2xl hover:bg-slate-100 transition-all hover:scale-105">

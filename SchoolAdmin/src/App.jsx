@@ -8,14 +8,15 @@ import BranchDetail from "./Dashbord.jsx/BranchDetail";
 import AddBranch from "./Dashbord.jsx/AddBranch";
 import ChangePassword from "./Dashbord.jsx/ChangePassword";
 import Reports from "./Dashbord.jsx/Reports";
+import SchoolAdminLogin from "./Login";
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
         {/* Login Page */}
-        <Route path="/" element={<Login />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<SchoolAdminLogin />} />
+        {/* <Route path="/login" element={<Login />} /> */}
 
         {/* Dashboard Layout */}
         <Route path="/dashbord" element={<MainDashBord />}>

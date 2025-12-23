@@ -13,6 +13,7 @@ import {
   FaBell,
   FaSearch,
   FaCog,
+  FaMapMarkedAlt,
 } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { MdClose, MdDashboard } from "react-icons/md";
@@ -130,6 +131,19 @@ export default function MainDashBord() {
               </div>
             )}
           </NavLink>
+          <NavLink
+            to="/dashbord/manage-class"
+            className={menuClass}
+            onClick={closeSidebar}
+          >
+            <FaGraduationCap size={20} />
+            {open && <span className="font-semibold">Manage Class</span>}
+            {!open && (
+              <div className="absolute left-full ml-2 px-3 py-2 bg-slate-800 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                Manage Class
+              </div>
+            )}
+          </NavLink>
 
           <NavLink
             to="/dashbord/manage-section"
@@ -141,20 +155,6 @@ export default function MainDashBord() {
             {!open && (
               <div className="absolute left-full ml-2 px-3 py-2 bg-slate-800 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                 Manage Section
-              </div>
-            )}
-          </NavLink>
-
-          <NavLink
-            to="/dashbord/manage-class"
-            className={menuClass}
-            onClick={closeSidebar}
-          >
-            <FaGraduationCap size={20} />
-            {open && <span className="font-semibold">Manage Class</span>}
-            {!open && (
-              <div className="absolute left-full ml-2 px-3 py-2 bg-slate-800 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                Manage Class
               </div>
             )}
           </NavLink>
@@ -174,10 +174,20 @@ export default function MainDashBord() {
           </NavLink>
 
           <NavLink
-            to="/dashbord/approval"
+            to="/dashbord/mapping-fees"
             className={menuClass}
             onClick={closeSidebar}
           >
+            <FaMapMarkedAlt size={20} />
+            {open && <span className="font-semibold">Mapping Fees</span>}
+            {!open && (
+              <div className="absolute left-full ml-2 px-3 py-2 bg-slate-800 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                Mapping Fees
+              </div>
+            )}
+          </NavLink>
+
+          <NavLink to="/approval" className={menuClass} onClick={closeSidebar}>
             <FaCheckCircle size={20} />
             {open && <span className="font-semibold">Approval</span>}
             {!open && (
