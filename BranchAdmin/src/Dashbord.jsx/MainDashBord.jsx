@@ -187,7 +187,11 @@ export default function MainDashBord() {
             )}
           </NavLink>
 
-          <NavLink to="/approval" className={menuClass} onClick={closeSidebar}>
+          <NavLink
+            to="/dashbord/approval"
+            className={menuClass}
+            onClick={closeSidebar}
+          >
             <FaCheckCircle size={20} />
             {open && <span className="font-semibold">Approval</span>}
             {!open && (
