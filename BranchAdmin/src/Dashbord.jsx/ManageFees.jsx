@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { showSuccess, showError, showConfirm, showToast } from '../utils/sweetAlert';
 
 export default function ManageFees() {
   const [showForm, setShowForm] = useState(false);
@@ -11,6 +12,14 @@ export default function ManageFees() {
     totalAmount: ''
   });
 
+  // Load fees from localStorage on component mount
+  React.useEffect(() => {
+    const savedFees = localStorage.getItem('manageFees');
+    if (savedFees) {
+      setFees(JSON.parse(savedFees));
+    }
+  }, []);
+
   const handleAddFee = () => {
     setShowForm(true);
     setEditingFee(null);
@@ -22,7 +31,7 @@ export default function ManageFees() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const feeData = {
       ...formData,
@@ -31,11 +40,17 @@ export default function ManageFees() {
       status: 'Active'
     };
     
+    let updatedFees;
     if (editingFee) {
-      setFees(fees.map(fee => fee.id === editingFee.id ? feeData : fee));
+      updatedFees = fees.map(fee => fee.id === editingFee.id ? feeData : fee);
+      await showSuccess('Updated!', 'Fee structure updated successfully');
     } else {
-      setFees([...fees, feeData]);
+      updatedFees = [...fees, feeData];
+      await showSuccess('Created!', 'New fee structure created successfully');
     }
+    
+    setFees(updatedFees);
+    localStorage.setItem('manageFees', JSON.stringify(updatedFees));
     setShowForm(false);
     setEditingFee(null);
   };
@@ -46,9 +61,13 @@ export default function ManageFees() {
     setShowForm(true);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this fee?')) {
-      setFees(fees.filter(fee => fee.id !== id));
+  const handleDelete = async (id) => {
+    const result = await showConfirm('Delete Fee?', 'This will permanently delete the fee structure');
+    if (result.isConfirmed) {
+      const updatedFees = fees.filter(fee => fee.id !== id);
+      setFees(updatedFees);
+      localStorage.setItem('manageFees', JSON.stringify(updatedFees));
+      showToast('success', 'Fee deleted successfully');
     }
   };
 
@@ -136,7 +155,12 @@ export default function ManageFees() {
                 <select
                   value={formData.frequency}
                   onChange={(e) => setFormData({...formData, frequency: e.target.value})}
-                  className="w-full border-2 border-gray-300 p-4 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white shadow-sm hover:shadow-md text-lg"
+                  disabled={formData.feeType === 'Fixed Fees'}
+                  className={`w-full border-2 p-4 rounded-2xl transition-all shadow-sm text-lg ${
+                    formData.feeType === 'Fixed Fees' 
+                      ? 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed' 
+                      : 'border-gray-300 bg-white hover:shadow-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+                  }`}
                   required
                 >
                   <option value="Monthly">Monthly</option>
@@ -169,7 +193,11 @@ export default function ManageFees() {
                   <h4 className="text-lg font-bold text-blue-800 mb-2">Fee Summary</h4>
                   <div className="text-3xl font-bold text-blue-900">
                     ₹{parseInt(formData.totalAmount || 0).toLocaleString()} 
-                    <span className="text-lg text-blue-600 ml-2">/ {formData.frequency}</span>
+                    {formData.feeType === 'Fixed Fees' ? (
+                      <span className="text-lg text-blue-600 ml-2">One Time</span>
+                    ) : (
+                      <span className="text-lg text-blue-600 ml-2">/ {formData.frequency}</span>
+                    )}
                   </div>
                   <p className="text-blue-700 mt-2">{formData.feeName} - {formData.feeType}</p>
                 </div>

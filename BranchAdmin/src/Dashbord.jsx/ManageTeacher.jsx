@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { showSuccess, showError, showConfirm, showToast } from '../utils/sweetAlert';
 
 export default function ManageTeacher() {
   const [showForm, setShowForm] = useState(false);
@@ -49,13 +50,15 @@ export default function ManageTeacher() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (editingTeacher) {
       setTeachers(teachers.map(t => t.id === editingTeacher.id ? { ...formData, id: editingTeacher.id, status: 'Active' } : t));
+      await showSuccess('Updated!', 'Teacher profile updated successfully');
     } else {
       const newTeacher = { ...formData, id: Date.now(), status: 'Active' };
       setTeachers([...teachers, newTeacher]);
+      await showSuccess('Added!', 'New teacher added successfully');
     }
     setShowForm(false);
     setEditingTeacher(null);
@@ -90,8 +93,12 @@ export default function ManageTeacher() {
     });
   };
 
-  const handleDelete = (id) => {
-    setTeachers(teachers.filter(t => t.id !== id));
+  const handleDelete = async (id) => {
+    const result = await showConfirm('Delete Teacher?', 'This will permanently delete the teacher profile');
+    if (result.isConfirmed) {
+      setTeachers(teachers.filter(t => t.id !== id));
+      showToast('success', 'Teacher deleted successfully');
+    }
   };
 
   const toggleStatus = (id) => {
@@ -112,7 +119,7 @@ export default function ManageTeacher() {
     });
   };
 
-  const handleTaskSubmit = (e) => {
+  const handleTaskSubmit = async (e) => {
     e.preventDefault();
     const newTask = {
       ...taskData,
@@ -131,7 +138,7 @@ export default function ManageTeacher() {
     
     setShowTaskForm(false);
     setSelectedTeacher(null);
-    alert(`Task "${taskData.title}" assigned to ${selectedTeacher.name}`);
+    await showSuccess('Task Assigned!', `Task "${taskData.title}" assigned to ${selectedTeacher.name}`);
   };
 
   const [showViewTeacher, setShowViewTeacher] = useState(false);
@@ -159,7 +166,7 @@ export default function ManageTeacher() {
     setShowEditTaskForm(true);
   };
 
-  const handleTaskUpdate = (e) => {
+  const handleTaskUpdate = async (e) => {
     e.preventDefault();
     setTeachers(teachers.map(t => 
       t.id === viewingTeacher.id 
@@ -185,7 +192,7 @@ export default function ManageTeacher() {
     
     setShowEditTaskForm(false);
     setEditingTask(null);
-    alert(`Task "${taskData.title}" updated successfully`);
+    await showSuccess('Task Updated!', `Task "${taskData.title}" updated successfully`);
   };
 
   return (

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSchool } from '../context/SchoolContext';
+import { showSuccess, showError, showConfirm, showToast, showWarning } from '../utils/sweetAlert';
 
 export default function ManageSection() {
   const { sections, classes, addSection, updateSection, deleteSection } = useSchool();
@@ -12,9 +13,9 @@ export default function ManageSection() {
     description: ''
   });
 
-  const handleAddSection = () => {
+  const handleAddSection = async () => {
     if (classes.length === 0) {
-      alert('Please create classes first before adding sections!');
+      await showWarning('Classes Required!', 'Please create classes first before adding sections!');
       return;
     }
     setShowForm(true);
@@ -27,12 +28,14 @@ export default function ManageSection() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (editingSection) {
       updateSection(editingSection.id, formData);
+      await showSuccess('Updated!', 'Section updated successfully');
     } else {
       addSection(formData);
+      await showSuccess('Added!', 'New section created successfully');
     }
     setShowForm(false);
     setEditingSection(null);
@@ -44,9 +47,11 @@ export default function ManageSection() {
     setShowForm(true);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this section?')) {
+  const handleDelete = async (id) => {
+    const result = await showConfirm('Delete Section?', 'This will permanently delete the section and all associated data');
+    if (result.isConfirmed) {
       deleteSection(id);
+      showToast('success', 'Section deleted successfully');
     }
   };
 

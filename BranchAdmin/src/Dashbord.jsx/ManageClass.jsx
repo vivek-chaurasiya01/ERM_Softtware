@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSchool } from '../context/SchoolContext';
+import { showSuccess, showError, showConfirm, showToast } from '../utils/sweetAlert';
 
 export default function ManageClass() {
   const { classes, addClass, updateClass, deleteClass } = useSchool();
@@ -23,12 +24,14 @@ export default function ManageClass() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (editingClass) {
       updateClass(editingClass.id, formData);
+      await showSuccess('Updated!', 'Class updated successfully');
     } else {
       addClass(formData);
+      await showSuccess('Added!', 'New class created successfully');
     }
     setShowForm(false);
     setEditingClass(null);
@@ -40,9 +43,11 @@ export default function ManageClass() {
     setShowForm(true);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this class?')) {
+  const handleDelete = async (id) => {
+    const result = await showConfirm('Delete Class?', 'This will permanently delete the class and all associated data');
+    if (result.isConfirmed) {
       deleteClass(id);
+      showToast('success', 'Class deleted successfully');
     }
   };
 

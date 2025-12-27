@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { showSuccess, showError, showConfirm, showToast } from '../utils/sweetAlert';
 
 export default function Approval() {
   const [approvals, setApprovals] = useState([
@@ -15,20 +16,26 @@ export default function Approval() {
   const [showDetails, setShowDetails] = useState(false);
   const [selectedApproval, setSelectedApproval] = useState(null);
 
-  const handleApprove = (id) => {
-    setApprovals(approvals.map(item => 
-      item.id === id ? { ...item, status: 'Approved' } : item
-    ));
-    setShowDetails(false);
-    alert('Request approved successfully!');
+  const handleApprove = async (id) => {
+    const result = await showConfirm('Approve Request?', 'Are you sure you want to approve this request?');
+    if (result.isConfirmed) {
+      setApprovals(approvals.map(item => 
+        item.id === id ? { ...item, status: 'Approved' } : item
+      ));
+      setShowDetails(false);
+      await showSuccess('Approved!', 'Request approved successfully!');
+    }
   };
 
-  const handleReject = (id) => {
-    setApprovals(approvals.map(item => 
-      item.id === id ? { ...item, status: 'Rejected' } : item
-    ));
-    setShowDetails(false);
-    alert('Request rejected!');
+  const handleReject = async (id) => {
+    const result = await showConfirm('Reject Request?', 'Are you sure you want to reject this request?');
+    if (result.isConfirmed) {
+      setApprovals(approvals.map(item => 
+        item.id === id ? { ...item, status: 'Rejected' } : item
+      ));
+      setShowDetails(false);
+      await showError('Rejected!', 'Request has been rejected!');
+    }
   };
 
   const handleViewDetails = (approval) => {

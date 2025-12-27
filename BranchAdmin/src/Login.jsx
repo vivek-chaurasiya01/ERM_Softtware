@@ -1,14 +1,29 @@
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+import { showSuccess, showError, showLoading, closeLoading } from "./utils/sweetAlert";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const Navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    Navigate("/dashbord");
+    
+    // Show loading
+    showLoading('Logging in...', 'Please wait while we verify your credentials');
+    
+    // Simulate API call
+    setTimeout(async () => {
+      closeLoading();
+      
+      if (email && password) {
+        await showSuccess('Login Successful!', 'Welcome to Branch Admin Dashboard');
+        Navigate("/dashbord");
+      } else {
+        await showError('Login Failed!', 'Please enter valid credentials');
+      }
+    }, 2000);
 
     console.log("Login Data:", { email, password });
   };

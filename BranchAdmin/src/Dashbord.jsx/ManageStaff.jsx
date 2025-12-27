@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { showSuccess, showError, showConfirm, showToast } from '../utils/sweetAlert';
 
 export default function ManageStaff() {
   const [showForm, setShowForm] = useState(false);
@@ -47,13 +48,15 @@ export default function ManageStaff() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (editingStaff) {
       setStaff(staff.map(t => t.id === editingStaff.id ? { ...formData, id: editingStaff.id, status: 'Active' } : t));
+      await showSuccess('Updated!', 'Staff member updated successfully');
     } else {
       const newStaff = { ...formData, id: Date.now(), status: 'Active' };
       setStaff([...staff, newStaff]);
+      await showSuccess('Added!', 'New staff member added successfully');
     }
     setShowForm(false);
     setEditingStaff(null);
@@ -88,8 +91,12 @@ export default function ManageStaff() {
     });
   };
 
-  const handleDelete = (id) => {
-    setStaff(staff.filter(t => t.id !== id));
+  const handleDelete = async (id) => {
+    const result = await showConfirm('Delete Staff?', 'This will permanently delete the staff member');
+    if (result.isConfirmed) {
+      setStaff(staff.filter(t => t.id !== id));
+      showToast('success', 'Staff member deleted successfully');
+    }
   };
 
   const toggleStatus = (id) => {
@@ -110,7 +117,7 @@ export default function ManageStaff() {
     });
   };
 
-  const handleTaskSubmit = (e) => {
+  const handleTaskSubmit = async (e) => {
     e.preventDefault();
     const newTask = {
       ...taskData,
@@ -129,7 +136,7 @@ export default function ManageStaff() {
     
     setShowTaskForm(false);
     setSelectedStaff(null);
-    alert(`Task "${taskData.title}" assigned to ${selectedStaff.name}`);
+    await showSuccess('Task Assigned!', `Task "${taskData.title}" assigned to ${selectedStaff.name}`);
   };
 
   const handleViewTasks = (staffMember) => {
@@ -157,7 +164,7 @@ export default function ManageStaff() {
     setShowEditTaskForm(true);
   };
 
-  const handleTaskUpdate = (e) => {
+  const handleTaskUpdate = async (e) => {
     e.preventDefault();
     setStaff(staff.map(s => 
       s.id === viewingStaff.id 
@@ -183,7 +190,7 @@ export default function ManageStaff() {
     
     setShowEditTaskForm(false);
     setEditingTask(null);
-    alert(`Task "${taskData.title}" updated successfully`);
+    await showSuccess('Task Updated!', `Task "${taskData.title}" updated successfully`);
   };
 
   return (

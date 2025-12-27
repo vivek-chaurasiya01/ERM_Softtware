@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSchool } from '../context/SchoolContext';
+import { showSuccess, showError, showConfirm, showToast, showWarning } from '../utils/sweetAlert';
 
 export default function MappingFees() {
   const { classes, sections } = useSchool();
@@ -20,17 +21,17 @@ export default function MappingFees() {
     }
   }, []);
 
-  const handleAddFees = () => {
+  const handleAddFees = async () => {
     if (classes.length === 0) {
-      alert('Please create classes first in Manage Class!');
+      await showWarning('Classes Required!', 'Please create classes first in Manage Class!');
       return;
     }
     if (sections.length === 0) {
-      alert('Please create sections first in Manage Section!');
+      await showWarning('Sections Required!', 'Please create sections first in Manage Section!');
       return;
     }
     if (createdFees.length === 0) {
-      alert('Please create fees first in Manage Fees!');
+      await showWarning('Fees Required!', 'Please create fees first in Manage Fees!');
       return;
     }
     
@@ -42,7 +43,7 @@ export default function MappingFees() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const selectedClassObj = classes.find(c => c.id === parseInt(formData.selectedClass));
     const selectedSectionObj = sections.find(s => s.id === parseInt(formData.selectedSection));
@@ -61,11 +62,14 @@ export default function MappingFees() {
 
     setMappings([...mappings, newMapping]);
     setShowForm(false);
+    await showSuccess('Mapped!', 'Fee successfully mapped to class and section');
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this mapping?')) {
+  const handleDelete = async (id) => {
+    const result = await showConfirm('Delete Mapping?', 'This will permanently delete the fee mapping');
+    if (result.isConfirmed) {
       setMappings(mappings.filter(m => m.id !== id));
+      showToast('success', 'Fee mapping deleted successfully');
     }
   };
 
